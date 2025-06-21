@@ -40,6 +40,8 @@ def fetch_data(ticker, start_date, end_date):
         data = yf.download(ticker, start=start_date, end=end_date)
         if data.empty:
             return None
+        data.index = pd.to_datetime(data.index)
+        data.sort_index(inplace=True)
         data.dropna(inplace=True)
         return data
     except Exception as e:
@@ -100,8 +102,10 @@ if data is not None and not data.empty:
 
         fig_rsi = go.Figure()
         fig_rsi.add_trace(go.Scatter(x=data.index, y=data['RSI'], name="RSI", line=dict(color="magenta")))
-        fig_rsi.add_hline(y=70, line=dict(dash='dash', color='red'))
-        fig_rsi.add_hline(y=30, line=dict(dash='dash', color='green'))
+        fig_rsi.add_shape(type="line", x0=data.index.min(), x1=data.index.max(), y0=70, y1=70,
+                          line=dict(color="red", dash="dash"))
+        fig_rsi.add_shape(type="line", x0=data.index.min(), x1=data.index.max(), y0=30, y1=30,
+                          line=dict(color="green", dash="dash"))
         fig_rsi.update_layout(title="📉 Relative Strength Index (RSI)", template="plotly_dark", height=300)
         st.plotly_chart(fig_rsi, use_container_width=True)
 
