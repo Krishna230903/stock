@@ -21,8 +21,18 @@ st.markdown("""
 st.sidebar.header("📅 Select Date Range")
 
 min_date = date(2015, 1, 1)
-start_date = st.sidebar.date_input("Start Date", value=date(2023, 1, 1), min_value=min_date, max_value=date.today())
-end_date = st.sidebar.date_input("End Date", value=date.today(), min_value=start_date, max_value=date.today())
+
+def_date_option = st.sidebar.selectbox("Choose Date Range Option", ("Last 1 Year", "Last 6 Months", "Custom"))
+
+if def_date_option == "Last 1 Year":
+    start_date = date.today().replace(year=date.today().year - 1)
+    end_date = date.today()
+elif def_date_option == "Last 6 Months":
+    start_date = date.today().replace(month=max(1, date.today().month - 6))
+    end_date = date.today()
+else:
+    start_date = st.sidebar.date_input("Start Date", value=date(2023, 1, 1), min_value=min_date, max_value=date.today())
+    end_date = st.sidebar.date_input("End Date", value=date.today(), min_value=start_date, max_value=date.today())
 
 st.sidebar.header("📂 Choose Analysis Type")
 analysis_type = st.sidebar.selectbox(
