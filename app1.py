@@ -5,7 +5,7 @@ import yfinance as yf
 import pandas as pd
 import plotly.graph_objects as go
 from datetime import datetime, date
-import talib
+import pandas_ta as ta
 
 # ---------------------- Page Config ---------------------- #
 st.set_page_config(page_title="\ud83d\udcca Infosys Stock Analysis", layout="wide")
@@ -80,7 +80,7 @@ if data is not None and not data.empty:
     if analysis_type == "\ud83d\udcca Technical Analysis":
         data['SMA20'] = data['Close'].rolling(window=20).mean()
         data['SMA50'] = data['Close'].rolling(window=50).mean()
-        data['RSI'] = talib.RSI(data['Close'], timeperiod=14)
+        data['RSI'] = ta.rsi(data['Close'], length=14)
 
         fig = go.Figure()
         fig.add_trace(go.Scatter(x=data.index, y=data['Close'], name="Close Price", line=dict(color="white")))
